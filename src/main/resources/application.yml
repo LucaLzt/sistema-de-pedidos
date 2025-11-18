@@ -1,0 +1,36 @@
+# Application Configuration
+spring:
+  application:
+    name: SistemaDePedidos
+  datasource:
+    url: ${POSTGRES_URL:jdbc:postgresql://localhost:5432/sistema_de_pedidos}
+    username: ${POSTGRES_USER:myuser}
+    password: ${POSTGRES_PASSWORD:secret}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USER:myuser}
+    password: ${RABBITMQ_PASSWORD:secret}
+  mail:
+    host: sandbox.smtp.mailtrap.io
+    port: 587
+    username: ${MAILTRAP_USER:your_mailtrap_username}
+    password: ${MAILTRAP_PASSWORD:your_mailtrap_password}
+    properties:
+        mail:
+            smtp:
+                auth: true
+                starttls.enable: true
+                connectiontimeout: 5000
+                timeout: 5000
+                writetimeout: 5000
+    test-connection: false
+
+server:
+    port: 8080
