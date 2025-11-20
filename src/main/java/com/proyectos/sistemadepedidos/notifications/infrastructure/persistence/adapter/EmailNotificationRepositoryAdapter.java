@@ -37,7 +37,7 @@ public class EmailNotificationRepositoryAdapter implements EmailNotificationRepo
     }
 
     private EmailNotification toDomain(EmailNotificationJpaEntity entity) {
-        return new EmailNotification(
+        return EmailNotification.restore(
                 entity.getId(),
                 entity.getToAddress(),
                 entity.getSubject(),

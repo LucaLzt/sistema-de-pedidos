@@ -9,7 +9,8 @@ import java.time.Instant;
 
 @Entity
 @Table(name = "email_notifications")
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -23,7 +24,7 @@ public class EmailNotificationJpaEntity {
     @Column(nullable = false, length = 50)
     private EmailType type;
 
-    @Column(name = "to_adress", nullable = false)
+    @Column(name = "to_address", nullable = false)
     private String toAddress;
 
     @Column(nullable = false)
