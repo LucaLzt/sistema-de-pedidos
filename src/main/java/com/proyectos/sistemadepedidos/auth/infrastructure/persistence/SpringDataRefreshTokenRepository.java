@@ -9,7 +9,9 @@ import java.util.Optional;
 public interface SpringDataRefreshTokenRepository extends JpaRepository<RefreshTokenJpaEntity, Long> {
 
     Optional<RefreshTokenJpaEntity> findByToken(String token);
+
     List<RefreshTokenJpaEntity> findAllByUser_Id(Long userId);
+
     void deleteAllByUser_Id(Long userId);
 
 }

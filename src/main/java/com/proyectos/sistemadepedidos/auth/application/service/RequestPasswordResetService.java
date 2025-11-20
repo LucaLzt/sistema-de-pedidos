@@ -8,15 +8,11 @@ import com.proyectos.sistemadepedidos.auth.domain.repository.PasswordResetReposi
 import com.proyectos.sistemadepedidos.auth.domain.repository.UserRepository;
 import com.proyectos.sistemadepedidos.notifications.application.in.ResetPasswordEmailCommand;
 import com.proyectos.sistemadepedidos.notifications.application.in.SendResetPasswordEmailUseCase;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class RequestPasswordResetService implements RequestPasswordResetUseCase {
 
     private final UserRepository userRepository;
@@ -36,14 +32,7 @@ public class RequestPasswordResetService implements RequestPasswordResetUseCase 
 
         String tokenValue = tokenProviderPort.generatePasswordResetToken(user);
 
-        PasswordResetToken token = new PasswordResetToken(
-                null,
-                user.getId(),
-                tokenValue,
-                Instant.now(),
-                Instant.now().plusSeconds(15 * 60), // 15 min
-                null
-        );
+        PasswordResetToken token = PasswordResetToken.create(user.getId(), tokenValue);
 
         passwordResetRepository.save(token);
 

@@ -7,10 +7,15 @@ import java.time.Duration;
 public interface TokenProviderPort {
 
     String generateAccessToken(User user);
+
     String generateRefreshToken(User user);
+
     Duration getRefreshTokenTtl();
+
     String generatePasswordResetToken(User user);
+
     boolean isAccessTokenValid(String token);
+
     String getUsernameFromAccessToken(String token);
 
 }

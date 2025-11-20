@@ -59,7 +59,7 @@ public class PasswordResetTokenRepositoryAdapter implements PasswordResetReposit
     }
 
     private PasswordResetToken toDomain(PasswordResetTokenJpaEntity entity) {
-        return new PasswordResetToken(
+        return PasswordResetToken.restore(
                 entity.getId(),
                 entity.getUser().getId(),
                 entity.getToken(),

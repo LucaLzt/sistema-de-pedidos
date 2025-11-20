@@ -9,7 +9,9 @@ import java.util.Optional;
 public interface SpringDataPasswordResetTokenRepository extends JpaRepository<PasswordResetTokenJpaEntity, Long> {
 
     Optional<PasswordResetTokenJpaEntity> findByToken(String token);
+
     void deleteByUser_Id(Long userId);
+
     void deleteByExpiresAtBefore(Instant now);
 
 }

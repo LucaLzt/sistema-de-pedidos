@@ -27,18 +27,12 @@ public class RegisterUserService implements RegisterUserUseCase {
 
         String encodedPassword = passwordEncoderPort.encode(command.rawPassword());
 
-        User user = new User(
-                null,
-                null,
-                null,
+        User user = User.create(
                 command.name(),
                 command.lastName(),
                 command.email(),
                 encodedPassword,
-                Role.USER,
-                null,
-                true,
-                null
+                Role.USER
         );
 
         userRepository.save(user);

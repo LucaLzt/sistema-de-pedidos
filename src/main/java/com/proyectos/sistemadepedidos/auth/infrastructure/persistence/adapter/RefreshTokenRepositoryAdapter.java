@@ -63,7 +63,7 @@ public class RefreshTokenRepositoryAdapter implements RefreshTokenRepository {
     }
 
     private RefreshToken toDomain(RefreshTokenJpaEntity entity) {
-        return new RefreshToken(
+        return RefreshToken.restore(
                 entity.getId(),
                 entity.getUser().getId(),
                 entity.getToken(),

@@ -2,6 +2,7 @@ package com.proyectos.sistemadepedidos.auth.infrastructure.web;
 
 import com.proyectos.sistemadepedidos.auth.application.port.in.*;
 import com.proyectos.sistemadepedidos.auth.infrastructure.web.dto.*;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class AuthController {
     private final ResetPasswordUseCase resetPasswordUseCase;
 
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody RegisterUserRequest request) {
+    public ResponseEntity<Void> register(@RequestBody @Valid RegisterUserRequest request) {
         RegisterUserCommand command = new RegisterUserCommand(
                 request.getFirstName(),
                 request.getLastName(),
@@ -35,7 +36,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request){
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
         LoginCommand command = new LoginCommand(
                 request.getEmail(),
                 request.getPassword()
@@ -44,7 +45,7 @@ public class AuthController {
         LoginResult result = loginUseCase.login(command);
 
         LoginResponse response = new LoginResponse(
-                result.accesToken(),
+                result.accessToken(),
                 result.refreshToken()
         );
 

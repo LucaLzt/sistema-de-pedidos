@@ -13,8 +13,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -43,13 +41,10 @@ public class LoginService implements LoginUseCase {
         String accessToken = tokenProviderPort.generateAccessToken(user);
         String refreshTokenValue = tokenProviderPort.generateRefreshToken(user);
 
-        RefreshToken refreshToken = new RefreshToken(
-                null,
+        RefreshToken refreshToken = RefreshToken.create(
                 user.getId(),
                 refreshTokenValue,
-                Instant.now(),
-                Instant.now().plus(tokenProviderPort.getRefreshTokenTtl()),
-                false
+                tokenProviderPort.getRefreshTokenTtl()
         );
 
         refreshTokenRepository.save(refreshToken);

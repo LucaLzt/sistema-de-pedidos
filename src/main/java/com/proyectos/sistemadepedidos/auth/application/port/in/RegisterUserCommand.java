@@ -5,4 +5,5 @@ public record RegisterUserCommand(
         String lastName,
         String email,
         String rawPassword
-) {}
+) {
+}

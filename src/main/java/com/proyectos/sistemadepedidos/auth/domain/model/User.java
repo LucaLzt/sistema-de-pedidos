@@ -3,7 +3,6 @@ package com.proyectos.sistemadepedidos.auth.domain.model;
 import lombok.Getter;
 
 import java.time.Instant;
-import java.util.List;
 
 @Getter
 public class User {
@@ -18,15 +17,9 @@ public class User {
     private Instant createdAt;
     private Instant updatedAt;
 
-    private final List<RefreshToken> refreshTokens;
-    private final List<PasswordResetToken> passwordResetTokens;
-
-    public User(Long id, List<RefreshToken> refreshTokens, List<PasswordResetToken> passwordResetTokens,
-                String firstName, String lastName, String email, String password, Role role,
-                Instant createdAt, boolean enabled, Instant updatedAt) {
+    private User(Long id, String firstName, String lastName, String email, String password,
+                 Role role, Instant createdAt, boolean enabled, Instant updatedAt) {
         this.id = id;
-        this.refreshTokens = refreshTokens;
-        this.passwordResetTokens = passwordResetTokens;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -35,6 +28,21 @@ public class User {
         this.createdAt = createdAt;
         this.enabled = enabled;
         this.updatedAt = updatedAt;
+    }
+
+    public static User restore(Long id, String firstName, String lastName, String email, String password,
+                               Role role, Instant createdAt, boolean enabled, Instant updatedAt) {
+        return new User(id, firstName, lastName, email, password, role, createdAt, enabled, updatedAt);
+    }
+
+    public static User create(String firstName, String lastName, String email, String password, Role role) {
+        return new User(
+                null,
+                firstName, lastName, email, password, role,
+                Instant.now(),
+                true,
+                null
+        );
     }
 
     public void enable() {
