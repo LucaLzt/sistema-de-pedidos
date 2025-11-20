@@ -11,7 +11,6 @@ public class PasswordEncoderAdapter implements PasswordEncoderPort {
 
     private final PasswordEncoder delegate;
 
-
     @Override
     public String encode(String rawPassword) {
         return delegate.encode(rawPassword);

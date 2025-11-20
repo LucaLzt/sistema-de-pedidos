@@ -6,6 +6,8 @@ import com.proyectos.sistemadepedidos.auth.domain.model.PasswordResetToken;
 import com.proyectos.sistemadepedidos.auth.domain.model.User;
 import com.proyectos.sistemadepedidos.auth.domain.repository.PasswordResetRepository;
 import com.proyectos.sistemadepedidos.auth.domain.repository.UserRepository;
+import com.proyectos.sistemadepedidos.notifications.application.in.ResetPasswordEmailCommand;
+import com.proyectos.sistemadepedidos.notifications.application.in.SendResetPasswordEmailUseCase;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ public class RequestPasswordResetService implements RequestPasswordResetUseCase 
     private final UserRepository userRepository;
     private final PasswordResetRepository passwordResetRepository;
     private final TokenProviderPort tokenProviderPort;
+    private final SendResetPasswordEmailUseCase sendResetPasswordEmailUseCase;
 
     @Override
     public void requestPasswordReset(String email) {
@@ -44,7 +47,7 @@ public class RequestPasswordResetService implements RequestPasswordResetUseCase 
 
         passwordResetRepository.save(token);
 
-        // Here we create the email, persist it, and send it through a port
-
+        var command = new ResetPasswordEmailCommand(user.getEmail(), tokenValue);
+        sendResetPasswordEmailUseCase.sendResetPasswordEmail(command);
     }
 }

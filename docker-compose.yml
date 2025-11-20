@@ -9,28 +9,78 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    container_name: rabbitmq-sistema-de-pedidos
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
 
   app:
     build: .
     container_name: sistema-de-pedidos-app
     restart: always
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
     environment:
+      # Database
       POSTGRES_URL: ${POSTGRES_URL}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
 
+      # Security (JWT)
       JWT_SECRET: ${JWT_SECRET}
       JWT_ACCESS_TOKEN_EXPIRATION_SECONDS: ${JWT_ACCESS_TOKEN_EXPIRATION_SECONDS}
       JWT_REFRESH_TOKEN_EXPIRATION_SECONDS: ${JWT_REFRESH_TOKEN_EXPIRATION_SECONDS}
+      JWT_PASSWORD_RESET_TOKEN_EXPIRATION_SECONDS: ${JWT_PASSWORD_RESET_TOKEN_EXPIRATION_SECONDS}
 
+      # Mail
       MAIL_USER: ${MAIL_USER}
       MAIL_PASS: ${MAIL_PASS}
+
+      # RabbitMQ Connection
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_USER: ${RABBITMQ_USER}
+      RABBITMQ_PASS: ${RABBITMQ_PASS}
+
+      # RabbitMQ Resources (Nombres de colas)
+      RABBITMQ_EMAIL_EXCHANGE: ${RABBITMQ_EMAIL_EXCHANGE}
+      RABBITMQ_RECOVERY_QUEUE: ${RABBITMQ_RECOVERY_QUEUE}
+      RABBITMQ_RECOVERY_ROUTING_KEY: ${RABBITMQ_RECOVERY_ROUTING_KEY}
+      RABBITMQ_ORDER_QUEUE: ${RABBITMQ_ORDER_QUEUE}
+      RABBITMQ_ORDER_ROUTING_KEY: ${RABBITMQ_ORDER_ROUTING_KEY}
+
+      # Frontend URLs
+      FRONTEND_RESET_PASSWORD_URL: ${FRONTEND_RESET_PASSWORD_URL}
+      FRONTEND_ORDER_DETAILS_URL: ${FRONTEND_ORDER_DETAILS_URL}
+
     ports:
       - "8080:8080"
 
 volumes:
   postgres_data:
+  rabbitmq_data:

@@ -11,12 +11,33 @@ spring:
       ddl-auto: update
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: 5672
+    username: ${RABBITMQ_USER:guest}
+    password: ${RABBITMQ_PASS:guest}
 
 jwt:
   secret-key: ${JWT_SECRET}
   access-token-expiration-seconds: ${JWT_ACCESS_TOKEN_EXPIRATION_SECONDS:900}
   refresh-token-expiration-seconds: ${JWT_REFRESH_TOKEN_EXPIRATION_SECONDS:604800}
   password-reset-token-expiration-seconds: ${JWT_PASSWORD_RESET_TOKEN_EXPIRATION_SECONDS:900}
+
+rabbitmq:
+  email:
+    exchange: ${RABBITMQ_EMAIL_EXCHANGE:email.exchange}
+    recovery-password:
+      queue: ${RABBITMQ_RECOVERY_QUEUE:email.recovery-password.queue}
+      routing-key: ${RABBITMQ_RECOVERY_ROUTING_KEY:email.recovery-password}
+    order:
+      queue: ${RABBITMQ_ORDER_QUEUE:email.order.queue}
+      routing-key: ${RABBITMQ_ORDER_ROUTING_KEY:email.order}
+
+frontend:
+  reset-password:
+    base-url: ${FRONTEND_RESET_PASSWORD_URL}
+  order-details:
+    base-url: ${FRONTEND_ORDER_DETAILS_URL}
 
 server:
   port: 8080
