@@ -3,6 +3,7 @@ package com.proyectos.sistemadepedidos.auth.application.service;
 import com.proyectos.sistemadepedidos.auth.application.port.in.RegisterUserCommand;
 import com.proyectos.sistemadepedidos.auth.application.port.in.RegisterUserUseCase;
 import com.proyectos.sistemadepedidos.auth.application.port.out.PasswordEncoderPort;
+import com.proyectos.sistemadepedidos.auth.domain.exception.EmailAlreadyExistsException;
 import com.proyectos.sistemadepedidos.auth.domain.model.Role;
 import com.proyectos.sistemadepedidos.auth.domain.model.User;
 import com.proyectos.sistemadepedidos.auth.domain.repository.UserRepository;
@@ -22,7 +23,7 @@ public class RegisterUserService implements RegisterUserUseCase {
     public void register(RegisterUserCommand command) {
 
         if (userRepository.existsByEmail(command.email())) {
-            throw new IllegalArgumentException("Email already in use");
+            throw new EmailAlreadyExistsException(command.email());
         }
 
         String encodedPassword = passwordEncoderPort.encode(command.rawPassword());

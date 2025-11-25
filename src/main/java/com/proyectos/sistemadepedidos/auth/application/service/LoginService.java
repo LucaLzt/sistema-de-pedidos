@@ -5,6 +5,7 @@ import com.proyectos.sistemadepedidos.auth.application.port.in.LoginResult;
 import com.proyectos.sistemadepedidos.auth.application.port.in.LoginUseCase;
 import com.proyectos.sistemadepedidos.auth.application.port.out.PasswordEncoderPort;
 import com.proyectos.sistemadepedidos.auth.application.port.out.TokenProviderPort;
+import com.proyectos.sistemadepedidos.auth.domain.exception.InvalidCredentialsException;
 import com.proyectos.sistemadepedidos.auth.domain.model.RefreshToken;
 import com.proyectos.sistemadepedidos.auth.domain.model.User;
 import com.proyectos.sistemadepedidos.auth.domain.repository.RefreshTokenRepository;
@@ -27,7 +28,7 @@ public class LoginService implements LoginUseCase {
     public LoginResult login(LoginCommand command) {
 
         User user = userRepository.findByEmail(command.email())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid email"));
+                .orElseThrow(InvalidCredentialsException::new);
 
         boolean matches = passwordEncoderPort.matches(
                 command.rawPassword(),
@@ -35,7 +36,7 @@ public class LoginService implements LoginUseCase {
         );
 
         if (!matches) {
-            throw new IllegalArgumentException("Invalid password");
+            throw new InvalidCredentialsException();
         }
 
         String accessToken = tokenProviderPort.generateAccessToken(user);
