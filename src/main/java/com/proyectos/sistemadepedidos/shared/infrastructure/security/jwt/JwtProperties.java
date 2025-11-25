@@ -1,4 +1,4 @@
-package com.proyectos.sistemadepedidos.auth.infrastructure.jwt;
+package com.proyectos.sistemadepedidos.shared.infrastructure.security.jwt;
 
 import lombok.Getter;
 import lombok.Setter;

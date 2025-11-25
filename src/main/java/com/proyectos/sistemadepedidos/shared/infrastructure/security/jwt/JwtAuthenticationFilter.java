@@ -1,4 +1,4 @@
-package com.proyectos.sistemadepedidos.auth.infrastructure.jwt;
+package com.proyectos.sistemadepedidos.shared.infrastructure.security.jwt;
 
 import com.proyectos.sistemadepedidos.auth.application.port.out.TokenProviderPort;
 import jakarta.servlet.FilterChain;

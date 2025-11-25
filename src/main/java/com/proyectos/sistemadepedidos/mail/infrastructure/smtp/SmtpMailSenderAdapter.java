@@ -17,9 +17,6 @@ public class SmtpMailSenderAdapter implements MailSenderPort {
 
     private final JavaMailSender javaMailSender;
 
-    @Value("${mail.default-from}")
-    private String defaultFrom;
-
     @Override
     public void send(Mail mail) {
         if (mail.isHtml()) {
@@ -31,7 +28,6 @@ public class SmtpMailSenderAdapter implements MailSenderPort {
 
     private void sendPlainText(Mail mail) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(defaultFrom);
         message.setTo(mail.getTo());
         message.setSubject(mail.getSubject());
         message.setText(mail.getBody());
