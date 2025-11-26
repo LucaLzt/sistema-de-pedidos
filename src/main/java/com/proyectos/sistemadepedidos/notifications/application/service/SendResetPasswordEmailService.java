@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.proyectos.sistemadepedidos.notifications.application.in.ResetPasswordEmailCommand;
 import com.proyectos.sistemadepedidos.notifications.application.in.SendResetPasswordEmailUseCase;
 import com.proyectos.sistemadepedidos.notifications.application.out.EmailSenderPort;
+import com.proyectos.sistemadepedidos.notifications.domain.exception.NotificationProcessingException;
 import com.proyectos.sistemadepedidos.notifications.domain.model.EmailNotification;
 import com.proyectos.sistemadepedidos.notifications.domain.repository.EmailNotificationRepository;
 import jakarta.transaction.Transactional;
@@ -32,7 +33,7 @@ public class SendResetPasswordEmailService implements SendResetPasswordEmailUseC
             );
             payloadJson = objectMapper.writeValueAsString(payloadData);
         } catch (JsonProcessingException e) {
-            throw new IllegalStateException("Error creating JSON payload for order email");
+            throw new NotificationProcessingException("Failed to serialize reset password payload", e);
         }
 
         EmailNotification notification = EmailNotification.createResetPassword(

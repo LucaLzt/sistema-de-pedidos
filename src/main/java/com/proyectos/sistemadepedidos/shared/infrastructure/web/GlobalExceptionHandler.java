@@ -1,9 +1,6 @@
 package com.proyectos.sistemadepedidos.shared.infrastructure.web;
 
-import com.proyectos.sistemadepedidos.shared.domain.exception.BadRequestException;
-import com.proyectos.sistemadepedidos.shared.domain.exception.ConflictException;
-import com.proyectos.sistemadepedidos.shared.domain.exception.ResourceNotFoundException;
-import com.proyectos.sistemadepedidos.shared.domain.exception.UnauthorizedException;
+import com.proyectos.sistemadepedidos.shared.domain.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -45,6 +42,13 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleDomainException(BadCredentialsException e) {
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, "Invalid email or password");
         problem.setTitle("Unauthorized");
+        return problem;
+    }
+
+    @ExceptionHandler(InternalServerErrorException.class)
+    public ProblemDetail handleInternalServerError(InternalServerErrorException e) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred while processing the request.");
+        problem.setTitle("Internal Server Error");
         return problem;
     }
 

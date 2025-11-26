@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.proyectos.sistemadepedidos.notifications.application.in.OrderEmailCommand;
 import com.proyectos.sistemadepedidos.notifications.application.in.SendOrderEmailUseCase;
 import com.proyectos.sistemadepedidos.notifications.application.out.EmailSenderPort;
+import com.proyectos.sistemadepedidos.notifications.domain.exception.NotificationProcessingException;
 import com.proyectos.sistemadepedidos.notifications.domain.model.EmailNotification;
 import com.proyectos.sistemadepedidos.notifications.domain.repository.EmailNotificationRepository;
 import jakarta.transaction.Transactional;
@@ -34,7 +35,7 @@ public class SendOrderEmailService implements SendOrderEmailUseCase {
             );
             payloadJson = objectMapper.writeValueAsString(payloadData);
         } catch (JsonProcessingException e) {
-            throw new IllegalStateException("Error creating JSON payload for order email");
+            throw new NotificationProcessingException("Failed to serialize order email payload", e);
         }
 
         String subject = "Order Update #" + command.orderId();
