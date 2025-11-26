@@ -5,6 +5,8 @@ import com.proyectos.sistemadepedidos.notifications.application.in.SendOrderEmai
 import com.proyectos.sistemadepedidos.orders.application.port.in.OrderResult;
 import com.proyectos.sistemadepedidos.orders.application.port.in.UpdateOrderStatusCommand;
 import com.proyectos.sistemadepedidos.orders.application.port.in.UpdateOrderStatusUseCase;
+import com.proyectos.sistemadepedidos.orders.domain.exception.InvalidOrderStatusException;
+import com.proyectos.sistemadepedidos.orders.domain.exception.OrderNotFoundException;
 import com.proyectos.sistemadepedidos.orders.domain.model.Order;
 import com.proyectos.sistemadepedidos.orders.domain.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,13 +29,13 @@ public class UpdateOrderStatusService implements UpdateOrderStatusUseCase {
     public OrderResult updateStatus(UpdateOrderStatusCommand command) {
 
         Order order = orderRepository.findById(command.orderId())
-                .orElseThrow(() -> new IllegalArgumentException("Order not found."));
+                .orElseThrow(() -> new OrderNotFoundException(command.orderId()));
 
         switch (command.newStatus()) {
             case PAID -> order.markAsPaid();
             case CANCELLED -> order.cancel();
             case SHIPPED -> order.markAsShipped();
-            default -> throw new IllegalStateException("Unknown update status.");
+            default -> throw new InvalidOrderStatusException("Unexpected status: " + command.newStatus());
         }
 
         Order saved = orderRepository.save(order);

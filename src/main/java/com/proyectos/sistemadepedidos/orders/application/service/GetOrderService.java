@@ -2,6 +2,7 @@ package com.proyectos.sistemadepedidos.orders.application.service;
 
 import com.proyectos.sistemadepedidos.orders.application.port.in.GetOrderUseCase;
 import com.proyectos.sistemadepedidos.orders.application.port.in.OrderResult;
+import com.proyectos.sistemadepedidos.orders.domain.exception.OrderNotFoundException;
 import com.proyectos.sistemadepedidos.orders.domain.model.Order;
 import com.proyectos.sistemadepedidos.orders.domain.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ public class GetOrderService implements GetOrderUseCase {
     @Override
     public OrderResult getById(Long id) {
         Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Order not found."));
+                .orElseThrow(() -> new OrderNotFoundException(id));
         return toResult(order);
     }
 

@@ -1,7 +1,7 @@
 package com.proyectos.sistemadepedidos.shared.infrastructure.web;
 
+import com.proyectos.sistemadepedidos.shared.domain.exception.BadRequestException;
 import com.proyectos.sistemadepedidos.shared.domain.exception.ConflictException;
-import com.proyectos.sistemadepedidos.shared.domain.exception.DomainException;
 import com.proyectos.sistemadepedidos.shared.domain.exception.ResourceNotFoundException;
 import com.proyectos.sistemadepedidos.shared.domain.exception.UnauthorizedException;
 import org.springframework.http.HttpStatus;
@@ -12,6 +12,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(BadRequestException.class)
+    public ProblemDetail handleBadRequest(BadRequestException e) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
+        problem.setTitle("Bad Request");
+        return problem;
+    }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ProblemDetail handleResourceNotFound(ResourceNotFoundException e) {
